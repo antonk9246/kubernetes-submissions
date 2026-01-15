@@ -2,13 +2,10 @@ FROM ruby:3.2-alpine
 
 WORKDIR /app
 
-RUN apk add --no-cache tzdata build-base
-
-COPY Gemfile ./
-RUN bundle install --without development test
+RUN apk add --no-cache tzdata && \
+    gem install webrick
 
 COPY app.rb ./
-
 RUN sed -i 's/\r$//' /app/app.rb && \
     chmod +x /app/app.rb
 
