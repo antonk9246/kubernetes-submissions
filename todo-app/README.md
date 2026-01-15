@@ -1,27 +1,30 @@
-# Todo App - Step 2
+# Todo App - Step 3
 
-Simple web server with declarative Kubernetes deployment.
+Web application with HTML interface accessible via HTTP.
 
 ## Features
-- Uses environment variable `PORT` (default: 8080)
-- Health checks at `/health` endpoint
-- Declarative Kubernetes configuration
+- HTML response for GET requests to `/`
+- Environment variables for configuration
+- Health check endpoint `/health`
+- JSON API endpoint `/api/status`
+- Accessible via kubectl port-forward
 
-## Deployment
+## Environment Variables
+- `PORT`: Server port (default: 8080)
+- `APP_NAME`: Application name
+- `APP_VERSION`: Application version
+
+## Testing with Port-Forward
 
 ```bash
-# Build Docker image
-docker build -t todo-app:1.2 .
-
-# Deploy to Kubernetes
+# Deploy
 kubectl apply -f manifests/deployment.yaml
 
-# Check status
-kubectl get pods -l app=todo-app
-kubectl logs -f deployment/todo-app
+# Port forward
+kubectl port-forward deployment/todo-app 8081:8080
 
-# Test health endpoint
-kubectl exec deployment/todo-app -- curl -s http://localhost:8080/health
+# Access in browser: http://localhost:8081
 
-# Delete deployment
-kubectl delete -f manifests/deployment.yaml
+# Or with curl
+curl http://localhost:8081/
+curl http://localhost:8081/health
