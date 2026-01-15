@@ -1,20 +1,27 @@
-# Todo App - Step 1
+# Todo App - Step 2
 
-Simple web server that outputs "Server started in port NNNN" on startup.
+Simple web server with declarative Kubernetes deployment.
 
 ## Features
-- Uses environment variable `PORT` to configure listening port
-- Default port is 8080
-- Simple HTTP server
+- Uses environment variable `PORT` (default: 8080)
+- Health checks at `/health` endpoint
+- Declarative Kubernetes configuration
 
-## Running locally
+## Deployment
 
 ```bash
-# Install Ruby dependencies if using Sinatra
-bundle install
+# Build Docker image
+docker build -t todo-app:1.2 .
 
-# Run with default port
-ruby app.rb
+# Deploy to Kubernetes
+kubectl apply -f manifests/deployment.yaml
 
-# Or with custom port
-PORT=3000 ruby app.rb
+# Check status
+kubectl get pods -l app=todo-app
+kubectl logs -f deployment/todo-app
+
+# Test health endpoint
+kubectl exec deployment/todo-app -- curl -s http://localhost:8080/health
+
+# Delete deployment
+kubectl delete -f manifests/deployment.yaml
